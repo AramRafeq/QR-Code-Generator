@@ -1,0 +1,13 @@
+C:\Users\Aram\documents\visual studio 2012\Projects\QR Code Generator\QR Code Generator\bin\Debug\QR Code Generator.exe.config
+C:\Users\Aram\documents\visual studio 2012\Projects\QR Code Generator\QR Code Generator\bin\Debug\QR Code Generator.exe
+C:\Users\Aram\documents\visual studio 2012\Projects\QR Code Generator\QR Code Generator\bin\Debug\QR Code Generator.pdb
+C:\Users\Aram\documents\visual studio 2012\Projects\QR Code Generator\QR Code Generator\obj\Debug\QR Code Generator.exe
+C:\Users\Aram\documents\visual studio 2012\Projects\QR Code Generator\QR Code Generator\obj\Debug\QR Code Generator.pdb
+C:\Users\Aram\documents\visual studio 2012\Projects\QR Code Generator\QR Code Generator\obj\Debug\QR Code Generator.csprojResolveAssemblyReference.cache
+C:\Users\Aram\source\repos\QR Code Generator\QR Code Generator\bin\Debug\QR Code Generator.exe.config
+C:\Users\Aram\source\repos\QR Code Generator\QR Code Generator\bin\Debug\QR Code Generator.exe
+C:\Users\Aram\source\repos\QR Code Generator\QR Code Generator\bin\Debug\QR Code Generator.pdb
+C:\Users\Aram\source\repos\QR Code Generator\QR Code Generator\obj\Debug\QR Code Generator.csprojResolveAssemblyReference.cache
+C:\Users\Aram\source\repos\QR Code Generator\QR Code Generator\obj\Debug\QR Code Generator.csproj.CoreCompileInputs.cache
+C:\Users\Aram\source\repos\QR Code Generator\QR Code Generator\obj\Debug\QR Code Generator.exe
+C:\Users\Aram\source\repos\QR Code Generator\QR Code Generator\obj\Debug\QR Code Generator.pdb
