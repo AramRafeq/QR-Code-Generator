@@ -15,7 +15,6 @@ namespace QR_Code_Generator
             string encodedData = DataObject.Encode();
             int msgSize = 0;
             string tmp = "";
-
             ArrayList msgPoly = new ArrayList();
 
             for (int i = 0; i < encodedData.Length; i=i+8 )
