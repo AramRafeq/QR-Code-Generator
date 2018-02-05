@@ -11,19 +11,21 @@ namespace QR_Code_Generator
     {
         static void Main(string[] args)
         {
-            DataEncoding DataObject = new DataEncoding("AREE SARCHIL");
+            DataEncoding DataObject = new DataEncoding("HELLO WORLD");
             string encodedData = DataObject.Encode();
             int msgSize = 0;
             string tmp = "";
             ArrayList msgPoly = new ArrayList();
+            string finalmsg = "";
             for (int i = 0; i < encodedData.Length; i=i+8 )
             {
                 tmp = encodedData.Substring(i, 8);
-               // Console.WriteLine(Convert.ToInt32(tmp, 2));
                 msgPoly.Add(Convert.ToInt32(tmp, 2));
+                
+                finalmsg += tmp;
                 msgSize++;
             }
-            Polynomial polynomial1 = new Polynomial(msgPoly, 27);
+            Polynomial polynomial1 = new Polynomial(msgPoly, msgSize-1);
 
             ArrayList genPoly = new ArrayList();
             genPoly.Add(0);
@@ -48,12 +50,19 @@ namespace QR_Code_Generator
 
             ErrorCorrection err = new ErrorCorrection();
             Polynomial correctionCodeWords = err.Divide(polynomial1, polynomial2);
-
-            for (int i = 0; i < correctionCodeWords.C.Count; i++ )
+            int neededeccodewords = 16;
+            int tmpnum = 0;
+            for (int i = 0; i < neededeccodewords; i++ )
             {
-                Console.Write((int)correctionCodeWords.C[i]+" , " );
+                tmpnum = (int)correctionCodeWords.C[i];
+                tmp = Convert.ToString(tmpnum, 2);
+                finalmsg += DataObject.paddZeros(tmp, (8 - tmp.Length), 'L');
             }
             
+            finalmsg = DataObject.paddZeros(finalmsg, 7, 'R');
+            //Console.WriteLine(finalmsg);
+            QRTemplate t = new QRTemplate(2);
+
 
         }
     }

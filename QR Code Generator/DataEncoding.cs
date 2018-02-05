@@ -144,7 +144,7 @@ namespace QR_Code_Generator
             return binaryResult;
         }
 
-        private String paddZeros(String input , int zeroCount , char mod)
+        public String paddZeros(String input , int zeroCount , char mod)
         {
             String res = "";
             for (int i = 0; i < zeroCount; i++ )
