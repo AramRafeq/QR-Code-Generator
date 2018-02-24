@@ -62,7 +62,7 @@ namespace QR_Code_Generator
             finalmsg = DataObject.paddZeros(finalmsg, 7, 'R');
             //Console.WriteLine(finalmsg);
             QRTemplate t = new QRTemplate(2);
-
+            t.save("D://Test.png");
 
         }
     }
