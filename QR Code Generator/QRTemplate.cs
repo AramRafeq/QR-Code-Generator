@@ -44,10 +44,67 @@ namespace QR_Code_Generator
                     template[row,column] = new QRModule();
                 }
             }
-            Console.WriteLine(templateD);
+
+            // Placing The Finder Pattern inside the template 
+            int rowstart = 0, columnstart = 0;
+            int finderrow = 0, findercolumn = 0;
+            QRModule tmp = null;
+            for (int row = rowstart; row < 7; row++)
+            {
+                for(int column=columnstart; column<7; column++)
+                {
+                    tmp = new QRModule();
+                    tmp.isAvailabe = false;
+                    tmp.value = finderPattern[finderrow, findercolumn];
+                    
+                    template[row, column] = tmp;
+                    findercolumn++;
+                }
+                findercolumn = 0;
+                finderrow++;
+            }
+
+            // ([(((V-1)*4)+21) - 7], 0)
+            rowstart =  ((((2-1)*4)+21)-7) ; columnstart = 0;
+            finderrow = 0; findercolumn = 0;
+
+            for (int row = rowstart; (row- rowstart) < 7; row++)
+            {
+                
+                for (int column = columnstart; column < 7; column++)
+                {
+                    tmp = new QRModule();
+                    tmp.isAvailabe = false;
+                    tmp.value = finderPattern[finderrow, findercolumn];
+                    Console.WriteLine(finderPattern[finderrow, findercolumn]);
+                    template[row, column] = tmp;
+                    findercolumn++;
+                }
+                findercolumn = 0;
+                finderrow++;
+            }
+
+            // ( 0, [(((V-1)*4)+21) - 7])
+            rowstart = 0; columnstart = ((((2 - 1) * 4) + 21) - 7);
+            finderrow = 0; findercolumn = 0;
+            for (int row = rowstart; row < 7; row++)
+            {
+                for (int column = columnstart; (column- columnstart)< 7; column++)
+                {
+                    tmp = new QRModule();
+                    tmp.isAvailabe = false;
+                    tmp.value = finderPattern[finderrow, findercolumn];
+                    
+                    template[row, column] = tmp;
+                    findercolumn++;
+                }
+                findercolumn = 0;
+                finderrow++;
+            }
+
 
         }
-        public void save(String url)
+        public void save(String url )
         {
             Bitmap b = new Bitmap(templateD, templateD);
             for (int row = 0; row < templateD; row++)
@@ -61,6 +118,7 @@ namespace QR_Code_Generator
             }
             b.Save(url);
         }
+
     }
 
     class QRModule
