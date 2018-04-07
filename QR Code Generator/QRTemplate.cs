@@ -13,6 +13,8 @@ namespace QR_Code_Generator
         private int baseD = 21;
         private int templateD;
         private byte[,] finderPattern;
+        private byte[,] alignmentPattern;
+
         public QRTemplate(int version)
         {
              
@@ -31,17 +33,35 @@ namespace QR_Code_Generator
                 finderPattern[i, 5] = 255;
             }
 
+            alignmentPattern = new byte[5,5];
+            for (int i = 0; i < 5; i++)
+            {
+                alignmentPattern[0, i] = 0;
+                alignmentPattern[4, i] = 0;
+                alignmentPattern[i, 0] = 0;
+                alignmentPattern[i, 4] = 0;
+            }
+
+            for (int i = 1; i < 4; i++)
+            {
+                alignmentPattern[1, i] = 255;
+                alignmentPattern[3, i] = 255;
+                alignmentPattern[i, 1] = 255;
+                alignmentPattern[i, 3] = 255;
+                
+            }
             
-           
 
             templateD = baseD+((version - 1) * 4);
             template = new QRModule[templateD, templateD];
-
+            
             for(int row = 0; row<templateD; row++)
             {
                 for (int column = 0; column < templateD; column++)
                 {
-                    template[row,column] = new QRModule();
+                    QRModule p = new QRModule();
+                    p.isAvailabe = true;
+                    template[row,column] = p;
                 }
             }
 
@@ -151,7 +171,50 @@ namespace QR_Code_Generator
                 finderrow++;
             }
 
+            // place the alignment pattern
+            int alignmentstart = 18; //only valid location for alignment pattern is  18,18 in version 2 QR code 
+            int alignmentrow = 0, alignmentcolumn = 0;
+            for (int row = alignmentstart-2; (row- (alignmentstart-2) )<5; row++ )
+            {
 
+                for (int column = alignmentstart - 2; (column - (alignmentstart-2) ) < 5; column++)
+                {
+                    tmp = new QRModule();
+                    tmp.isAvailabe = false;
+                    tmp.value = alignmentPattern[alignmentrow, alignmentcolumn];
+                   
+                    template[row, column] = tmp;
+                    alignmentcolumn++;
+                }
+                alignmentcolumn = 0;
+                alignmentrow++;
+            }
+
+
+            // add Timing Patterns
+            // horizantal timig line 
+            bool isblack = true;
+            for (int i =0; i<templateD; i++)
+            {
+                if (template[6, i].isAvailabe)
+                {
+                    tmp = new QRModule();
+                    tmp.isAvailabe = false;
+                    if (isblack)
+                    {                   
+                        tmp.value = 0;
+                        isblack = false;
+                    }
+                    else
+                    {  
+                        tmp.value = 255;
+                        isblack = true;
+                    }
+                    template[6, i] = tmp;
+                    template[i, 6] = tmp;
+                }
+                
+            }
         }
         public void save(String url )
         {
