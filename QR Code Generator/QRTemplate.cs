@@ -58,6 +58,22 @@ namespace QR_Code_Generator
                     tmp.value = finderPattern[finderrow, findercolumn];
                     
                     template[row, column] = tmp;
+                    // adding Separator 
+                    if (column==6)
+                    {
+                        tmp = new QRModule();
+                        tmp.isAvailabe = false;
+                        tmp.value = 255;
+                        template[row, column + 1] = tmp;
+                    }
+                    if (row == 6)
+                    {
+                        tmp = new QRModule();
+                        tmp.isAvailabe = false;
+                        tmp.value = 255;
+                        template[row+1, column] = tmp;
+                    }
+                    template[row + 1, column + 1] = tmp;
                     findercolumn++;
                 }
                 findercolumn = 0;
@@ -76,8 +92,26 @@ namespace QR_Code_Generator
                     tmp = new QRModule();
                     tmp.isAvailabe = false;
                     tmp.value = finderPattern[finderrow, findercolumn];
-                    Console.WriteLine(finderPattern[finderrow, findercolumn]);
                     template[row, column] = tmp;
+                    // adding Separator 
+                    if (column == 6)
+                    {
+                        tmp = new QRModule();
+                        tmp.isAvailabe = false;
+                        tmp.value = 255;
+                        template[row, column + 1] = tmp;
+                    }
+                    if ( (row - rowstart) == 0)
+                    {
+                        tmp = new QRModule();
+                        tmp.isAvailabe = false;
+                        tmp.value = 255;
+                        template[row-1, column] = tmp;
+                        template[row - 1, column + 1] = tmp;
+                    }
+                    
+
+
                     findercolumn++;
                 }
                 findercolumn = 0;
@@ -94,8 +128,23 @@ namespace QR_Code_Generator
                     tmp = new QRModule();
                     tmp.isAvailabe = false;
                     tmp.value = finderPattern[finderrow, findercolumn];
-                    
                     template[row, column] = tmp;
+                    // adding Separator 
+                    if ((column - columnstart) == 0)
+                    {
+                        tmp = new QRModule();
+                        tmp.isAvailabe = false;
+                        tmp.value = 255;
+                        template[row, column - 1] = tmp;
+                    }
+                    if (row == 6)
+                    {
+                        tmp = new QRModule();
+                        tmp.isAvailabe = false;
+                        tmp.value = 255;
+                        template[row + 1, column] = tmp;
+                        template[row + 1, column - 1] = tmp;
+                    }
                     findercolumn++;
                 }
                 findercolumn = 0;
