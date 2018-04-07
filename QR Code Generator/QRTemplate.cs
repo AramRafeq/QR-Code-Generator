@@ -15,7 +15,7 @@ namespace QR_Code_Generator
         private byte[,] finderPattern;
         private byte[,] alignmentPattern;
 
-        public QRTemplate(int version)
+        public QRTemplate(int version , string data)
         {
              
             finderPattern = new byte[7,7];
@@ -73,10 +73,11 @@ namespace QR_Code_Generator
             // place the alignment pattern
             addAlignmentPattern();
 
-            
-
             // adding the dark module
             addDarkModule();
+
+            // placing the data bits
+            placeDta(data);
         }
         public void save(String url )
         {
@@ -269,6 +270,53 @@ namespace QR_Code_Generator
             template[((4 * 2) + 9), 8].isAvailabe = false;
             template[((4 * 2) + 9), 8].value = 0;
         }
+        
+        public void placeDta(string data)
+        {
+            bool up = true;
+            int dataindex = 0;
+            byte bitzero = 255;
+            byte bitone = 0;
+            for (int column = templateD-1; column > 0; column = column - 2)
+            {
+                if (up)
+                {
+                    for (int row =templateD-1; row>=0; row--)
+                    {
+                        if (template[row,column].isAvailabe)
+                        {  
+                            template[row, column].value = (data[dataindex] == '0')? bitzero : bitone;
+                            dataindex++;
+                        }
+                        if (template[row, column-1].isAvailabe)
+                        {
+                            template[row, column-1].value = (data[dataindex] == '0') ? bitzero : bitone;
+                            dataindex++;
+                        }
+                    }
+                    up = false;
+                }
+                else
+                {
+                    for (int row = 0; row< templateD; row++)
+                    {
+                        if (template[row, column].isAvailabe)
+                        {
+                            template[row, column].value = (data[dataindex] == '0') ? bitzero : bitone;
+                            dataindex++;
+                        }
+                        if (template[row, column - 1].isAvailabe)
+                        {
+                            template[row, column - 1].value = (data[dataindex] == '0') ? bitzero : bitone;
+                            dataindex++;
+                        }
+                    }
+                    up = true;
+                }
+            }
+        }
+
+
     }
 
     class QRModule
