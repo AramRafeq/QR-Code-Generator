@@ -65,48 +65,84 @@ namespace QR_Code_Generator
                 }
             }
 
+            // add Timing Patterns
+            addTimingPatterns();
+
             // Placing The Finder Pattern inside the template 
+            add_FinderPatterns_Separators();
+            // place the alignment pattern
+            addAlignmentPattern();
+
+            
+
+            // adding the dark module
+            addDarkModule();
+        }
+        public void save(String url )
+        {
+            Bitmap b = new Bitmap(templateD, templateD);
+            for (int row = 0; row < templateD; row++)
+            {
+                for (int col = 0; col < templateD; col++)
+                {
+                    byte c = template[col, row].value;
+                    b.SetPixel(row, col, Color.FromArgb(255, c, c, c));
+                }
+
+            }
+            b.Save(url);
+        }
+
+        public void add_FinderPatterns_Separators()
+        {
             int rowstart = 0, columnstart = 0;
             int finderrow = 0, findercolumn = 0;
             QRModule tmp = null;
             for (int row = rowstart; row < 7; row++)
             {
-                for(int column=columnstart; column<7; column++)
+                for (int column = columnstart; column < 7; column++)
                 {
                     tmp = new QRModule();
                     tmp.isAvailabe = false;
                     tmp.value = finderPattern[finderrow, findercolumn];
-                    
+
                     template[row, column] = tmp;
                     // adding Separator 
-                    if (column==6)
+                    if (column == 6)
                     {
                         tmp = new QRModule();
                         tmp.isAvailabe = false;
                         tmp.value = 255;
                         template[row, column + 1] = tmp;
+                        
+                        template[row, column + 2].isAvailabe = false;// reserve informationarea
                     }
                     if (row == 6)
                     {
                         tmp = new QRModule();
                         tmp.isAvailabe = false;
                         tmp.value = 255;
-                        template[row+1, column] = tmp;
+                        template[row + 1, column] = tmp;
+                        
+                        template[row + 2, column].isAvailabe = false; // reserve informationarea
                     }
                     template[row + 1, column + 1] = tmp;
+
+                    template[row + 2, column + 2].isAvailabe = false; // reserve informationarea
                     findercolumn++;
+
                 }
                 findercolumn = 0;
                 finderrow++;
             }
 
             // ([(((V-1)*4)+21) - 7], 0)
-            rowstart =  ((((2-1)*4)+21)-7) ; columnstart = 0;
+            rowstart = ((((2 - 1) * 4) + 21) - 7); columnstart = 0;
             finderrow = 0; findercolumn = 0;
 
-            for (int row = rowstart; (row- rowstart) < 7; row++)
+            for (int row = rowstart; (row - rowstart) < 7; row++)
             {
-                
+
                 for (int column = columnstart; column < 7; column++)
                 {
                     tmp = new QRModule();
@@ -120,16 +156,18 @@ namespace QR_Code_Generator
                         tmp.isAvailabe = false;
                         tmp.value = 255;
                         template[row, column + 1] = tmp;
+                        template[row, column + 2].isAvailabe = false; // reserved area
                     }
-                    if ( (row - rowstart) == 0)
+
+                    if ((row - rowstart) == 0)
                     {
                         tmp = new QRModule();
                         tmp.isAvailabe = false;
                         tmp.value = 255;
-                        template[row-1, column] = tmp;
+                        template[row - 1, column] = tmp;
                         template[row - 1, column + 1] = tmp;
                     }
-                    
+
 
 
                     findercolumn++;
@@ -143,7 +181,7 @@ namespace QR_Code_Generator
             finderrow = 0; findercolumn = 0;
             for (int row = rowstart; row < 7; row++)
             {
-                for (int column = columnstart; (column- columnstart)< 7; column++)
+                for (int column = columnstart; (column - columnstart) < 7; column++)
                 {
                     tmp = new QRModule();
                     tmp.isAvailabe = false;
@@ -164,25 +202,32 @@ namespace QR_Code_Generator
                         tmp.value = 255;
                         template[row + 1, column] = tmp;
                         template[row + 1, column - 1] = tmp;
+                        template[row + 2, column - 1].isAvailabe = false; // reserved area
+                        template[row + 2, column].isAvailabe = false;// reserved area
                     }
+                   
                     findercolumn++;
                 }
                 findercolumn = 0;
                 finderrow++;
             }
 
-            // place the alignment pattern
+        }
+
+        public void addAlignmentPattern()
+        {
             int alignmentstart = 18; //only valid location for alignment pattern is  18,18 in version 2 QR code 
             int alignmentrow = 0, alignmentcolumn = 0;
-            for (int row = alignmentstart-2; (row- (alignmentstart-2) )<5; row++ )
+            QRModule tmp = null;
+            for (int row = alignmentstart - 2; (row - (alignmentstart - 2)) < 5; row++)
             {
 
-                for (int column = alignmentstart - 2; (column - (alignmentstart-2) ) < 5; column++)
+                for (int column = alignmentstart - 2; (column - (alignmentstart - 2)) < 5; column++)
                 {
                     tmp = new QRModule();
                     tmp.isAvailabe = false;
                     tmp.value = alignmentPattern[alignmentrow, alignmentcolumn];
-                   
+
                     template[row, column] = tmp;
                     alignmentcolumn++;
                 }
@@ -190,51 +235,40 @@ namespace QR_Code_Generator
                 alignmentrow++;
             }
 
+        }
 
-            // add Timing Patterns
-            // horizantal timig line 
+        public void addTimingPatterns()
+        {
             bool isblack = true;
-            for (int i =0; i<templateD; i++)
+            QRModule tmp = null;
+            for (int i = 0; i < templateD; i++)
             {
                 if (template[6, i].isAvailabe)
                 {
                     tmp = new QRModule();
                     tmp.isAvailabe = false;
                     if (isblack)
-                    {                   
+                    {
                         tmp.value = 0;
                         isblack = false;
                     }
                     else
-                    {  
+                    {
                         tmp.value = 255;
                         isblack = true;
                     }
                     template[6, i] = tmp;
                     template[i, 6] = tmp;
                 }
-                
-            }
 
-            // adding the dark module
-            template[((4 * 2) + 9), 8].isAvailabe = false ;
+            }
+        }
+           
+        public void addDarkModule()
+        {
+            template[((4 * 2) + 9), 8].isAvailabe = false;
             template[((4 * 2) + 9), 8].value = 0;
         }
-        public void save(String url )
-        {
-            Bitmap b = new Bitmap(templateD, templateD);
-            for (int row = 0; row < templateD; row++)
-            {
-                for (int col = 0; col < templateD; col++)
-                {
-                    byte c = template[col, row].value;
-                    b.SetPixel(row, col, Color.FromArgb(255, c, c, c));
-                }
-
-            }
-            b.Save(url);
-        }
-
     }
 
     class QRModule
