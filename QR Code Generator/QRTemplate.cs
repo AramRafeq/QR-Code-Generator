@@ -277,7 +277,7 @@ namespace QR_Code_Generator
             int dataindex = 0;
             byte bitzero = 255;
             byte bitone = 0;
-            for (int column = templateD-1; column > 0; column = column - 2)
+            for (int column = templateD-1; column > 6; column = column - 2)
             {
                 if (up)
                 {
@@ -314,6 +314,46 @@ namespace QR_Code_Generator
                     up = true;
                 }
             }
+
+            for (int column = 5; column > 0; column = column - 2)
+            {
+                if (up)
+                {
+                    for (int row = templateD - 1; row >= 0; row--)
+                    {
+                        if (template[row, column].isAvailabe)
+                        {
+                            template[row, column].value = (data[dataindex] == '0') ? bitzero : bitone;
+                            dataindex++;
+                        }
+                        if (template[row, column - 1].isAvailabe)
+                        {
+                            template[row, column - 1].value = (data[dataindex] == '0') ? bitzero : bitone;
+                            dataindex++;
+                        }
+                    }
+                    up = false;
+                }
+                else
+                {
+                    for (int row = 0; row < templateD; row++)
+                    {
+                        if (template[row, column].isAvailabe)
+                        {
+                            template[row, column].value = (data[dataindex] == '0') ? bitzero : bitone;
+                            dataindex++;
+                        }
+                        if (template[row, column - 1].isAvailabe)
+                        {
+                            template[row, column - 1].value = (data[dataindex] == '0') ? bitzero : bitone;
+                            dataindex++;
+                        }
+                    }
+                    up = true;
+                }
+            }
+
+
         }
 
 
