@@ -215,6 +215,10 @@ namespace QR_Code_Generator
                 }
                 
             }
+
+            // adding the dark module
+            template[((4 * 2) + 9), 8].isAvailabe = false ;
+            template[((4 * 2) + 9), 8].value = 0;
         }
         public void save(String url )
         {
