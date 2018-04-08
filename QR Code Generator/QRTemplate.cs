@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -78,6 +79,9 @@ namespace QR_Code_Generator
 
             // placing the data bits
             placeDta(data);
+
+            // datamask
+            dataMask();
         }
         public void save(String url )
         {
@@ -85,6 +89,21 @@ namespace QR_Code_Generator
             for (int row = 0; row < templateD; row++)
             {
                 for (int col = 0; col < templateD; col++)
+                {
+                    byte c = template[col, row].value;
+                    b.SetPixel(row, col, Color.FromArgb(255, c, c, c));
+                }
+
+            }
+            b.Save(url);
+        }
+        public static void save(QRModule[,] template,String url)
+        {
+            Bitmap b = new Bitmap(template.GetLength(0), template.GetLength(0) );
+           
+            for (int row = 0; row < template.GetLength(0); row++)
+            {
+                for (int col = 0; col < template.GetLength(0); col++)
                 {
                     byte c = template[col, row].value;
                     b.SetPixel(row, col, Color.FromArgb(255, c, c, c));
@@ -356,7 +375,139 @@ namespace QR_Code_Generator
 
         }
 
+        public void dataMask()
+        {
+            List<QRModule[,]> masktemplates = new List<QRModule[,]>();
 
+            masktemplates.Add(template);  //(row + column) mod 2 == 0
+            //masktemplates.Add(template);  //(row) mod 2 == 0
+            //masktemplates.Add(template);  //(column) mod 3 == 0
+            //masktemplates.Add(template);  //(row + column) mod 3 == 0
+            //masktemplates.Add(template);  //( floor(row / 2) + floor(column / 3) ) mod 2 == 0
+            //masktemplates.Add(template);  //((row * column) mod 2) + ((row * column) mod 3) == 0
+            //masktemplates.Add(template);  //( ((row * column) mod 2) + ((row * column) mod 3) ) mod 2 == 0
+            //masktemplates.Add(template);  //( ((row + column) mod 2) + ((row * column) mod 3) ) mod 2 == 0
+
+            QRModule[,] tmp = null;
+            //masktemplates.Count
+            for (int i = 0; i<masktemplates.Count; i++)
+            {
+                tmp = (QRModule[,])masktemplates[i];
+                switch (i)
+                {
+                    case 0:
+                        for (int row = 0; row<templateD; row++)
+                        {
+                            for (int column =0; column<templateD; column++)
+                            {
+                                if ( (row+column)%2==0 && tmp[row, column].isAvailabe)
+                                {
+                                    tmp[row, column].value = (tmp[row, column].value==0)? (byte)255: (byte)0;
+                                }
+                            }
+                        }
+                        masktemplates[i] = tmp;
+                        break;
+                    case 1:
+                        for (int row = 0; row < templateD; row++)
+                        {
+                            for (int column = 0; column < templateD; column++)
+                            {
+                                if ((row ) % 2 == 0 && tmp[row, column].isAvailabe)
+                                {
+                                    tmp[row, column].value = (tmp[row, column].value == 0) ? (byte)255 : (byte)0;
+                                }
+                            }
+                        }
+                        masktemplates[i] = tmp;
+                        break;
+                    case 2:
+                        for (int row = 0; row < templateD; row++)
+                        {
+                            for (int column = 0; column < templateD; column++)
+                            {
+                                if ((column) % 3 == 0 && tmp[row, column].isAvailabe)
+                                {
+                                    tmp[row, column].value = (tmp[row, column].value == 0) ? (byte)255 : (byte)0;
+                                }
+                            }
+                        }
+                        masktemplates[i] = tmp;
+                        break;
+                    case 3:
+                        for (int row = 0; row < templateD; row++)
+                        {
+                            for (int column = 0; column < templateD; column++)
+                            {
+                                if ((row + column) % 3 == 0 && tmp[row, column].isAvailabe)
+                                {
+                                    tmp[row, column].value = (tmp[row, column].value == 0) ? (byte)255 : (byte)0;
+                                }
+                            }
+                        }
+                        masktemplates[i] = tmp;
+                        break;
+                    case 4:
+                        for (int row = 0; row < templateD; row++)
+                        {
+                            for (int column = 0; column < templateD; column++)
+                            {
+                                if ( (Math.Floor((double)row / 2) + Math.Floor((double)column / 3)) % 2 == 0 && tmp[row, column].isAvailabe)
+                                {
+                                    tmp[row, column].value = (tmp[row, column].value == 0) ? (byte)255 : (byte)0;
+                                }
+                            }
+                        }
+                        masktemplates[i] = tmp;
+                        break;
+                    case 5:
+                        for (int row = 0; row < templateD; row++)
+                        {
+                            for (int column = 0; column < templateD; column++)
+                            {
+                                if (((row * column) % 2) +((row * column) % 3) == 0 && tmp[row, column].isAvailabe)
+                                {
+                                    tmp[row, column].value = (tmp[row, column].value == 0) ? (byte)255 : (byte)0;
+                                }
+                            }
+                        }
+                        masktemplates[i] = tmp;
+                        break;
+                    case 6:
+                        for (int row = 0; row < templateD; row++)
+                        {
+                            for (int column = 0; column < templateD; column++)
+                            {
+                                if ((((row * column) % 2) +((row * column) % 3) )% 2 == 0 && tmp[row, column].isAvailabe)
+                                {
+                                    tmp[row, column].value = (tmp[row, column].value == 0) ? (byte)255 : (byte)0;
+                                }
+                            }
+                        }
+                        masktemplates[i] = tmp;
+                        break;
+                    case 7:
+                        for (int row = 0; row < templateD; row++)
+                        {
+                            for (int column = 0; column < templateD; column++)
+                            {
+                                if ((((row + column) % 2) +((row * column) % 3) ) % 2 == 0 && tmp[row, column].isAvailabe)
+                                {
+                                    tmp[row, column].value = (tmp[row, column].value == 0) ? (byte)255 : (byte)0;
+                                }
+                            }
+                        }
+                        masktemplates[i] = tmp;
+                        break;
+                }
+            }
+            for (int i = 0; i < masktemplates.Count; i++)
+            {
+                tmp = (QRModule[,])masktemplates[i];
+                QRTemplate.save(tmp , "D://img_"+i+".png" );
+            }
+
+        }
     }
 
     class QRModule
